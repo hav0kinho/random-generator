@@ -1,8 +1,29 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import Torch from 'react-native-torch';
+import RNShake from 'react-native-shake';
 
 const App = () => {
   const [toogle, setToogle] = useState(false);
+
+  //Effect para Ligar Lanterna quando o Toogle mudar
+  useEffect(() => {
+    // Liga lanterna
+    Torch.switchState(toogle);
+  }, [toogle]);
+
+  //Effect para mudar o toogle quando o celular for chaqualado
+  useEffect(() => {
+    /*
+      Quando o celular for chacoalhado, mudaremos o toogle
+    */
+    const subscription = RNShake.addListener(() => {
+      setToogle(!toogle);
+    });
+    //Essa funcção vai ser chamad a quando o componente
+    //for desmontado
+    return () => subscription.remove();
+  }, []);
 
   return (
     <View style={toogle ? style.containerLight : style.container}>
